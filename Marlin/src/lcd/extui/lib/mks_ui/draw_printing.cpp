@@ -203,11 +203,11 @@ void lv_draw_printing() {
 }
 
 void disp_ext_temp() {
-  sprintf(public_buf_l, printing_menu.temp1, (int)thermalManager.degHotend(0), (int)thermalManager.degTargetHotend(0));
+  sprintf(public_buf_l, printing_menu.temp1, (int)thermalManager.temp_hotend[0].celsius, (int)thermalManager.temp_hotend[0].target);
   lv_label_set_text(labelExt1, public_buf_l);
 
   #if HAS_MULTI_EXTRUDER
-    sprintf(public_buf_l, printing_menu.temp1, (int)thermalManager.degHotend(1), (int)thermalManager.degTargetHotend(1));
+    sprintf(public_buf_l, printing_menu.temp1, (int)thermalManager.temp_hotend[1].celsius, (int)thermalManager.temp_hotend[1].target);
     lv_label_set_text(labelExt2, public_buf_l);
   #endif
 }
@@ -235,8 +235,7 @@ void disp_print_time() {
 }
 
 void disp_fan_Zpos() {
-  char str_1[16];
-  sprintf_P(public_buf_l, PSTR("%s"), dtostrf(current_position[Z_AXIS], 1, 3, str_1));
+  sprintf_P(public_buf_l, PSTR("%.3f"), current_position[Z_AXIS]);
   lv_label_set_text(labelZpos, public_buf_l);
 }
 

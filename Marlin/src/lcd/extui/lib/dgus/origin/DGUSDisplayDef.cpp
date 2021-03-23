@@ -20,9 +20,7 @@
  *
  */
 
-/**
- * lcd/extui/lib/dgus/origin/DGUSDisplayDef.cpp
- */
+/* DGUS implementation written by coldtobi in 2019 for Marlin */
 
 #include "../../../../../inc/MarlinConfigPre.h"
 
@@ -89,7 +87,7 @@ const uint16_t VPList_Status[] PROGMEM = {
 };
 
 const uint16_t VPList_Status2[] PROGMEM = {
-  // VP_M117, for completeness, but it cannot be auto-uploaded
+  /* VP_M117, for completeness, but it cannot be auto-uploaded */
   #if HOTENDS >= 1
     VP_Flowrate_E0,
   #endif

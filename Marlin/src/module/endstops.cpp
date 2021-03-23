@@ -405,9 +405,10 @@ void Endstops::event_handler() {
 }
 
 static void print_es_state(const bool is_hit, PGM_P const label=nullptr) {
-  if (label) SERIAL_ECHOPGM_P(label);
+  if (label) serialprintPGM(label);
   SERIAL_ECHOPGM(": ");
-  SERIAL_ECHOLNPGM_P(is_hit ? PSTR(STR_ENDSTOP_HIT) : PSTR(STR_ENDSTOP_OPEN));
+  serialprintPGM(is_hit ? PSTR(STR_ENDSTOP_HIT) : PSTR(STR_ENDSTOP_OPEN));
+  SERIAL_EOL();
 }
 
 void _O2 Endstops::report_states() {
@@ -468,22 +469,24 @@ void _O2 Endstops::report_states() {
   #if HAS_CUSTOM_PROBE_PIN
     print_es_state(PROBE_TRIGGERED(), PSTR(STR_Z_PROBE));
   #endif
-  #if MULTI_FILAMENT_SENSOR
-    #define _CASE_RUNOUT(N) case N: pin = FIL_RUNOUT##N##_PIN; state = FIL_RUNOUT##N##_STATE; break;
-    LOOP_S_LE_N(i, 1, NUM_RUNOUT_SENSORS) {
-      pin_t pin;
-      uint8_t state;
-      switch (i) {
-        default: continue;
-        REPEAT_S(1, INCREMENT(NUM_RUNOUT_SENSORS), _CASE_RUNOUT)
+  #if HAS_FILAMENT_SENSOR
+    #if NUM_RUNOUT_SENSORS == 1
+      print_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE, PSTR(STR_FILAMENT_RUNOUT_SENSOR));
+    #else
+      #define _CASE_RUNOUT(N) case N: pin = FIL_RUNOUT##N##_PIN; state = FIL_RUNOUT##N##_STATE; break;
+      LOOP_S_LE_N(i, 1, NUM_RUNOUT_SENSORS) {
+        pin_t pin;
+        uint8_t state;
+        switch (i) {
+          default: continue;
+          REPEAT_S(1, INCREMENT(NUM_RUNOUT_SENSORS), _CASE_RUNOUT)
+        }
+        SERIAL_ECHOPGM(STR_FILAMENT_RUNOUT_SENSOR);
+        if (i > 1) SERIAL_CHAR(' ', '0' + i);
+        print_es_state(extDigitalRead(pin) != state);
       }
-      SERIAL_ECHOPGM(STR_FILAMENT_RUNOUT_SENSOR);
-      if (i > 1) SERIAL_CHAR(' ', '0' + i);
-      print_es_state(extDigitalRead(pin) != state);
-    }
-    #undef _CASE_RUNOUT
-  #elif HAS_FILAMENT_SENSOR
-    print_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE, PSTR(STR_FILAMENT_RUNOUT_SENSOR));
+      #undef _CASE_RUNOUT
+    #endif
   #endif
 
   TERN_(BLTOUCH, bltouch._reset_SW_mode());

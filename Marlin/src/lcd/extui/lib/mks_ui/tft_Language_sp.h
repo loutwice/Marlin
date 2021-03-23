@@ -33,8 +33,6 @@
 #define AUTO_LEVELING_TEXT_SP   "Autolevel"
 #define SET_TEXT_SP             "Config"
 #define MORE_TEXT_SP            "Más"
-#define MORE_GCODE_SP           "G-Code"
-#define MORE_ENTER_GCODE_SP     "Introduzca el G-Code"
 
 #define ADD_TEXT_SP             "Más"
 #define DEC_TEXT_SP             "Menos"
@@ -272,3 +270,4 @@
 #define MORE_CUSTOM4_TEXT_SP  USER_DESC_4
 #define MORE_CUSTOM5_TEXT_SP  USER_DESC_5
 #define MORE_CUSTOM6_TEXT_SP  USER_DESC_6
+#define MORE_CUSTOM7_TEXT_SP  USER_DESC_7

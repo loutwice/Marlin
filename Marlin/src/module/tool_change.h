@@ -21,7 +21,8 @@
  */
 #pragma once
 
-#include "../inc/MarlinConfig.h"
+#include "../inc/MarlinConfigPre.h"
+#include "../core/types.h"
 
 //#define DEBUG_TOOLCHANGE_MIGRATION_FEATURE
 
@@ -79,7 +80,11 @@
 
 #if ENABLED(PARKING_EXTRUDER)
 
-  #define PE_MAGNET_ON_STATE TERN_(PARKING_EXTRUDER_SOLENOIDS_INVERT, !)PARKING_EXTRUDER_SOLENOIDS_PINS_ACTIVE
+  #if ENABLED(PARKING_EXTRUDER_SOLENOIDS_INVERT)
+    #define PE_MAGNET_ON_STATE !PARKING_EXTRUDER_SOLENOIDS_PINS_ACTIVE
+  #else
+    #define PE_MAGNET_ON_STATE PARKING_EXTRUDER_SOLENOIDS_PINS_ACTIVE
+  #endif
 
   void pe_solenoid_set_pin_state(const uint8_t extruder_num, const uint8_t state);
 
